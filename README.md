@@ -1,11 +1,12 @@
-# Alfonso Bravo — web
+# Alfonso Bravo · Web y asistente de preguntas frecuentes
 
-Next.js (App Router) + TypeScript + Tailwind CSS. Por ahora contiene una
-portada provisional y el widget flotante de dudas frecuentes. Todo funciona en
-local, sin APIs ni base de datos.
+Web con Next.js, TypeScript y Tailwind CSS que reúne una portada provisional y un widget flotante de preguntas frecuentes con mascota animada.
 
-**¿Vas a cambiar textos, preguntas o contactos?** Lee
-[`docs/guia-de-contenido.md`](docs/guia-de-contenido.md).
+El contenido, la configuración y los componentes están separados para editar textos y preguntas sin modificar la interfaz. Esta entrega funciona localmente y no requiere API ni base de datos.
+
+[Puesta en marcha](#puesta-en-marcha) · [Estructura](#estructura) · [Mascota del widget](#mascota-del-widget)
+
+---
 
 ## Puesta en marcha
 
