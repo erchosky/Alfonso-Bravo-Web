@@ -1,0 +1,154 @@
+/*
+ * Tokens visuales del widget de dudas frecuentes.
+ *
+ * Están en una capa (`@layer base`) para que cualquier regla normal de la web
+ * los sobrescriba sin `!important`, p. ej. en globals.css:
+ *
+ *   :root { --faq-primary: #b48cff; --faq-radius: 8px; }
+ *
+ * También pueden cambiarse por instancia con la prop `theme` o en
+ * `faqWidgetConfig.theme`.
+ */
+@layer base {
+  :root {
+    --faq-primary: #c9ad7a;
+    --faq-primary-contrast: #17140f;
+    --faq-background: #121116;
+    --faq-surface: #1b1a21;
+    --faq-text: #ece7df;
+    --faq-muted: #9d98a4;
+    --faq-border: rgb(255 255 255 / 0.09);
+    --faq-radius: 16px;
+    --faq-shadow:
+      0 24px 60px -18px rgb(0 0 0 / 0.7), 0 2px 10px rgb(0 0 0 / 0.35);
+    /* Sin definir: el widget hereda la tipografía de la web.
+       --faq-font: …;
+       --faq-font-heading: …; */
+    --faq-z-index: 60;
+    /* Marcas de contenido pendiente (solo visibles en vista previa). */
+    --faq-pending: #f0d690;
+    --faq-mascot-size: 6.5rem;
+  }
+}
+
+.faq-widget {
+  font-family: var(--faq-font, inherit);
+}
+
+.faq-widget :where(h2, h3, .faq-heading-font) {
+  font-family: var(--faq-font-heading, var(--faq-font, inherit));
+}
+
+.faq-widget :focus-visible {
+  outline: 2px solid var(--faq-primary);
+  outline-offset: 2px;
+}
+
+/* Los encabezados (y el contenedor durante una carga) reciben el foco al
+   cambiar de pantalla para anunciarla; no necesitan anillo visual. */
+.faq-widget [data-faq-heading]:focus,
+.faq-widget [data-faq-screen]:focus {
+  outline: none;
+}
+
+/*
+ * Colocación del panel. `data-layout` lo decide `sheetMediaQuery` en la
+ * configuración: hoja modal en móvil (vertical u horizontal) y panel
+ * flotante en escritorio.
+ */
+.faq-panel {
+  position: fixed;
+  z-index: var(--faq-z-index);
+}
+
+.faq-panel[data-layout="floating"] {
+  bottom: calc(var(--faq-mascot-size) + 2.25rem);
+  width: min(23.5rem, calc(100vw - 2rem));
+  height: min(38rem, calc(100dvh - var(--faq-mascot-size) - 3.75rem));
+}
+
+.faq-panel[data-layout="floating"][data-position="bottom-right"] {
+  right: 1.5rem;
+  transform-origin: bottom right;
+}
+
+.faq-panel[data-layout="floating"][data-position="bottom-left"] {
+  left: 1.5rem;
+  transform-origin: bottom left;
+}
+
+.faq-panel[data-layout="sheet"] {
+  left: max(0.75rem, env(safe-area-inset-left));
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  height: min(42rem, calc(100dvh - 1.5rem - env(safe-area-inset-top)));
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.faq-pending {
+  color: var(--faq-pending);
+  background: color-mix(in srgb, var(--faq-pending) 8%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--faq-pending) 45%, transparent);
+  border-radius: 4px;
+  padding: 0.05em 0.3em;
+  font-size: 0.92em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@keyframes faq-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+
+@keyframes faq-screen-in {
+  from {
+    opacity: 0;
+    transform: translateX(6px);
+  }
+}
+
+.faq-animate-panel {
+  animation: faq-panel-in 180ms ease-out;
+}
+
+@keyframes faq-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.faq-animate-backdrop {
+  animation: faq-fade-in 180ms ease-out;
+}
+
+/* Filo de luz muy sutil en el borde superior del panel. */
+.faq-panel-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0 12% auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--faq-primary) 55%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.faq-animate-screen {
+  animation: faq-screen-in 160ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-widget *,
+  .faq-widget *::before,
+  .faq-widget *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
